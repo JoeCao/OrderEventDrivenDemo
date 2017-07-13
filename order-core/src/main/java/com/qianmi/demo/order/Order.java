@@ -28,6 +28,7 @@ public class Order {
 
     }
 
+    @CommandHandler
     public Order(OpenOrderCommand command) {
         apply(new OrderOpenedEvent(command.getOrderId()));
     }
