@@ -51,7 +51,7 @@ public class AxonConfig {
 
     @Bean
     public OrderCommandHandler bankAccountCommandHandler() {
-        return new OrderCommandHandler(axonConfiguration.repository(Order.class), eventBus());
+        return new OrderCommandHandler(orderAggRepository(), eventBus());
     }
 
     @Bean
