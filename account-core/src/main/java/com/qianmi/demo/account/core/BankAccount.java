@@ -44,6 +44,8 @@ public class BankAccount {
         apply(new MoneyDepositedEvent(id, command.getAmountOfMoney()));
     }
 
+
+
     @CommandHandler
     public void withdraw(WithdrawMoneyCommand command) {
         if (command.getAmountOfMoney() <= balanceInCents + overdraftLimit) {
@@ -61,6 +63,11 @@ public class BankAccount {
 
     public void credit(long amount, String bankTransferId) {
         apply(new DestinationBankAccountCreditedEvent(id, amount, bankTransferId));
+    }
+
+
+    public void payOrder(long amount, String bankAccount) {
+        apply(new DebitAccountByOrderEvent(bankAccount, amount));
     }
 
     @CommandHandler

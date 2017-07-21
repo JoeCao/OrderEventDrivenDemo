@@ -25,6 +25,6 @@ public class OrderCommandHandlerTest {
         String id = "newTest";
         testFixture.givenNoPriorActivity()
                 .when(new OpenOrderCommand(id))
-                .expectEvents(new OrderOpenedEvent(id));
+                .expectEvents(new OrderOpenedEvent(id, "6ecb080f-50ac-469f-887c-f3524eaf1ae6", 1));
     }
 }

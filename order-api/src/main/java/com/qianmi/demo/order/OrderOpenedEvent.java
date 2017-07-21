@@ -8,4 +8,6 @@ import lombok.Value;
 @Value
 public class OrderOpenedEvent {
     private String id;
+    private String accountId;
+    private long totalAmount;
 }

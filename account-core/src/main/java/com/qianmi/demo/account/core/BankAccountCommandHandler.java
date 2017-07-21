@@ -16,27 +16,26 @@
 
 package com.qianmi.demo.account.core;
 
-import com.qianmi.demo.account.api.CreditDestinationBankAccountCommand;
-import com.qianmi.demo.account.api.DebitSourceBankAccountCommand;
-import com.qianmi.demo.account.api.DestinationBankAccountNotFoundEvent;
-import com.qianmi.demo.account.api.SourceBankAccountNotFoundEvent;
+import com.qianmi.demo.account.api.*;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.Aggregate;
 import org.axonframework.commandhandling.model.AggregateNotFoundException;
 import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.eventhandling.EventBus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage;
 
+@Component
 public class BankAccountCommandHandler {
 
+    @Autowired
     private Repository<BankAccount> repository;
+    @Autowired
     private EventBus eventBus;
 
-    public BankAccountCommandHandler(Repository<BankAccount> repository, EventBus eventBus) {
-        this.repository = repository;
-        this.eventBus = eventBus;
-    }
 
     @CommandHandler
     public void handle(DebitSourceBankAccountCommand command) {
@@ -60,5 +59,11 @@ public class BankAccountCommandHandler {
         catch (AggregateNotFoundException exception) {
             eventBus.publish(asEventMessage(new DestinationBankAccountNotFoundEvent(command.getBankTransferId())));
         }
+    }
+
+    @CommandHandler
+    public void payOrder(DebitAccountByOrderCommand command) {
+        Aggregate<BankAccount> bankAccountAggregate = repository.load(command.getAccountId());
+        bankAccountAggregate.execute(aggRoot -> aggRoot.payOrder(command.getTotalAmount(), command.getAccountId()));
     }
 }

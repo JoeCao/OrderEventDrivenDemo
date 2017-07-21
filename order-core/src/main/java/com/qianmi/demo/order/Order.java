@@ -14,9 +14,7 @@ import static org.axonframework.commandhandling.model.AggregateLifecycle.apply;
 /**
  * Created by caozupeng on 17/7/12.
  */
-@Aggregate(repository = "orderAggRepository")
-@Entity
-@Table(name = "tb_order")
+@Aggregate
 public class Order {
     @Id
     private String orderId;
@@ -30,7 +28,7 @@ public class Order {
 
     @CommandHandler
     public Order(OpenOrderCommand command) {
-        apply(new OrderOpenedEvent(command.getOrderId()));
+        apply(new OrderOpenedEvent(command.getOrderId(), "6ecb080f-50ac-469f-887c-f3524eaf1ae6", 1));
     }
 
     @CommandHandler

@@ -18,15 +18,10 @@ package com.qianmi.demo.account.config;
 
 import com.qianmi.demo.account.core.BankAccount;
 import com.qianmi.demo.account.core.BankAccountCommandHandler;
-import com.thoughtworks.xstream.XStream;
-import org.axonframework.common.jpa.EntityManagerProvider;
-import org.axonframework.common.transaction.TransactionManager;
+import org.axonframework.commandhandling.model.Repository;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventsourcing.eventstore.EventStorageEngine;
-import org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine;
-import org.axonframework.serialization.Serializer;
-import org.axonframework.serialization.xml.CompactDriver;
-import org.axonframework.serialization.xml.XStreamSerializer;
+import org.axonframework.eventsourcing.EventSourcingRepository;
+import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.spring.config.AxonConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,15 +30,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AxonConfig {
 
-    @Autowired
-    private AxonConfiguration axonConfiguration;
-    @Autowired
-    private EventBus eventBus;
 
     @Bean
-    public BankAccountCommandHandler bankAccountCommandHandler() {
-        return new BankAccountCommandHandler(axonConfiguration.repository(BankAccount.class), eventBus);
+    public Repository<BankAccount> repository(EventStore eventStore) {
+        return new EventSourcingRepository<>(BankAccount.class, eventStore);
     }
-
-
 }
